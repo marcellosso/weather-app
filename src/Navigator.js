@@ -5,12 +5,13 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import weatherMenu from './screens/weatherMenu'
 import detailed from './screens/detailed'
+import weatherMenuNoComment from './screens/weatherMenuNoComment'
 
 const detailedScreen = createSwitchNavigator({
     detailed: detailed,
-    WeatherMenu: weatherMenu,
+    weatherMenuNoComment: weatherMenuNoComment,
 }, {
-    initialRouteName: 'WeatherMenu'
+    initialRouteName: 'weatherMenuNoComment'
 })
 
 export default createAppContainer(detailedScreen)
