@@ -11,7 +11,7 @@ import {
     Keyboard,
     TouchableHighlight,
     Button,
-    TextInput
+    TextInput,
 } from 'react-native'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -129,7 +129,6 @@ class weatherMenuNoComment extends Component {
             </TouchableOpacity>
         ))
 
-
         return (
             <LinearGradient locations={[0.3, 1]} colors={['#61045f', '#210520']} style={styles.linearGradient}>
                 <View style={styles.container}>
@@ -158,7 +157,11 @@ class weatherMenuNoComment extends Component {
                         </View>
                     </Modal>
 
-                    <View style={{ height: hp('2%') }}></View>
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.titleText}>
+                            SANTOS, SP
+                        </Text>
+                    </View>
 
                         <LinearGradient colors={['#9002d1', '#e205ff']}
                             start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
@@ -223,7 +226,7 @@ class weatherMenuNoComment extends Component {
                             </Text>
                         </View>
                     </View>
-
+                    {/* TODO TROCAR ENTRE FAHRENHEIT E CELSIUS NO CLIQUE OU OPÇÃO NO MENUZINHO (COLOCAR UMA ENGRENAGEM) */}
                     <View style={styles.listContainer}>
                         <ScrollView scrollEventThrottle={160} horizontal={true}
                             showsHorizontalScrollIndicator={false}>
@@ -255,13 +258,27 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        paddingTop: hp('3%'),
+        paddingTop: hp('2%'),
 
+    },
+    titleContainer: {
+        marginBottom: hp('1.5%'), 
+        width: wp('100%'), 
+        justifyContent: 'center', 
+        alignItems: 'center'
     },
     linearGradient: {
         flex: 1,
         width: wp('100%'),
         height: hp('100%'),
+    },
+    titleText: {
+        color: 'white',
+        fontFamily: Platform.OS === 'ios' ? 'Montserrat Bold' : 'Montserrat-Bold',
+        textShadowColor: 'black',
+        textShadowOffset: { width: 3, height: 3 },
+        textShadowRadius: 10,
+        fontSize: wp('8%')
     },
     button: {
         paddingVertical: hp('0.2%'),

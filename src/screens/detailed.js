@@ -31,6 +31,7 @@ class detailed extends Component {
                     <Text>Temperatura: {JSON.stringify(navigation.getParam('temp'))}</Text>
                     <Text>Max: {JSON.stringify(navigation.getParam('max'))}</Text>
                     <Text>Min: {JSON.stringify(navigation.getParam('min'))}</Text>
+                    <Text>Temperatura Summary: PEGAR SUMMARY QUE VEM COM API</Text>
                 </View>
             </View>
         )
