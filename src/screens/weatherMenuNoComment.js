@@ -10,7 +10,8 @@ import {
     Animated,
     Keyboard,
     TouchableHighlight,
-    Button
+    Button,
+    TextInput
 } from 'react-native'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -109,6 +110,8 @@ class weatherMenuNoComment extends Component {
         this.setState({ isVisible: !this.state.isVisible });
       };
 
+      // TODO TIRAR O GETWEATHER() DE DENTRO DA AÇÃO DO BOTAO CHANGE LOCATION
+
     render() {
         const locationPredictions = this.state.locationPredictions.map(prediction => (
             <TouchableHighlight key={prediction.id} onPress={() => this.pressedPrediction(prediction)}>
@@ -117,7 +120,7 @@ class weatherMenuNoComment extends Component {
         ))
 
         const weatherOthers = this.state.weatherWeek.slice(1).map(weather => (
-            <TouchableOpacity onPress={() => {this.props.navigation.navigate('detailed', {
+            <TouchableOpacity key={weather.id} onPress={() => {this.props.navigation.navigate('detailed', {
                 temp: weather.temperatureMin, max: weather.temperatureMax, min: weather.temperatureMin
             })}}>
                 <WeatherOtherDays key={weather.id} day={this.dateTime(weather.time)}
@@ -130,14 +133,28 @@ class weatherMenuNoComment extends Component {
             <LinearGradient locations={[0.3, 1]} colors={['#61045f', '#210520']} style={styles.linearGradient}>
                 <View style={styles.container}>
 
-                    <Modal isVisible={this.state.isVisible}>
-                        <View style={{ flex: 1 }}>
-                            <Text>Hello!</Text>
-                            <Button title="Hide modal" onPress={this.toggleModal} />
+                    <Modal isVisible={this.state.isVisible} style={styles.modal}
+                        useNativeDriver={true} >
+                        <View style={{ flex: 1, alignItems: 'center' }}>
+                            <TextInput placeholder='Location'
+                                placeholderTextColor='white' style={styles.input}
+                                value={this.state.place}
+                                onChangeText={place => { this.onChangePlaceDebounced(place), this.setState({ place }) }} />
+                            <LinearGradient colors={['#9002d1', '#e205ff']}
+                            start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                            locations={[0.3, 1]}
+                            style={{
+                                borderRadius: wp('5%'), alignItems: 'center',  justifyContent: 'center', marginBottom: hp('2%')
+                            }}>
+                                <TouchableOpacity style={styles.button}
+                                onPress={() => { this.getWeather(), this.toggleModal() }}
+                                >
+                                    <Text style={[styles.buttonText, { color: 'white' }]}>Accept</Text>
+                                </TouchableOpacity>
+                            </LinearGradient>
+                            {locationPredictions}
                         </View>
                     </Modal>
-
-                    {locationPredictions}
 
                     <View style={{ height: hp('2%') }}></View>
 
@@ -145,11 +162,11 @@ class weatherMenuNoComment extends Component {
                             start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
                             locations={[0.3, 1]}
                             style={{
-                                borderRadius: 25, alignItems: 'center', paddingVertical: wp('1.2%'),
-                                paddingHorizontal: 60, justifyContent: 'center'
+                                borderRadius: wp('5%'), alignItems: 'center',
+                                justifyContent: 'center'
                             }}>
 
-                            <TouchableWithoutFeedback style={styles.button}
+                            <TouchableOpacity style={styles.button}
                                 onPress={() => { this.setState({ locationPredictions: [], place: '' }), this.getWeather(), this.toggleModal() }}
                             >
 
@@ -157,7 +174,7 @@ class weatherMenuNoComment extends Component {
                                     <Text style={styles.buttonText}>   Change Location</Text>
                                 </Icon>
 
-                            </TouchableWithoutFeedback>
+                            </TouchableOpacity>
                         </LinearGradient>
 
                     <View style={styles.infoContainer}>
@@ -215,7 +232,7 @@ class weatherMenuNoComment extends Component {
                             <View style={{ marginTop: hp('8.9%') }}>
 
                                 <Animated.ScrollView horizontal={true} contentContainerStyle={{ flexGrow: 1 }}
-                                    showsHorizontalScrollIndicator={false}>
+                                    showsHorizontalScrollIndicator={false} useNativeDriver={true}>
 
                                     {weatherOthers}
 
@@ -240,14 +257,17 @@ const styles = StyleSheet.create({
 
     },
     linearGradient: {
-
-        width: '100%',
-        height: '100%'
+        flex: 1,
+        width: wp('100%'),
+        height: hp('100%'),
     },
     button: {
-        paddingVertical: hp('5%'),
-        width: '100%',
-
+        paddingVertical: hp('0.2%'),
+        width: wp('82%'),
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: wp('5%'),
+        //backgroundColor: 'white'
     },
     buttonText: {
         fontFamily: Platform.OS === 'ios' ? 'Calistoga Regular' : 'Calistoga-Regular',
@@ -285,7 +305,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     sugestions: {
-        height: hp('10%'),
+        height: hp('12%'),
         backgroundColor: 'rgba(255,255,255,0.2)',
         padding: 5,
         paddingLeft: 10,
@@ -295,6 +315,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         color: 'white',
     },
+    modal: {
+        alignItems: 'center'
+    }
 })
 
 export default weatherMenuNoComment

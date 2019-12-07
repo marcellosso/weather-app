@@ -144,7 +144,7 @@ class weatherMenu extends Component {
         ))
 
         const weatherOthers = this.state.weatherWeek.slice(1).map(weather => (
-            <TouchableOpacity onPress={() => {this.props.navigation.navigate('detailed', {
+            <TouchableOpacity key={weather.id} onPress={() => {this.props.navigation.navigate('detailed', {
                 temp: weather.temperatureMin, max: weather.temperatureMax, min: weather.temperatureMin
             })}}>
                 {/* {console.log((weather.time + '000'))} */}
