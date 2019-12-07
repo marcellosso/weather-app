@@ -75,7 +75,7 @@ class weatherMenuNoComment extends Component {
             this.setState({
                 weatherToday: jsonRes.currently,
                 weatherWeek: jsonRes.daily.data,
-                todayDate: jsonRes.currently.time + '000'
+                todayDate: jsonRes.currently.time
             })
 
         } catch (err) {
@@ -113,6 +113,7 @@ class weatherMenuNoComment extends Component {
       // TODO TIRAR O GETWEATHER() DE DENTRO DA AÇÃO DO BOTAO CHANGE LOCATION
 
     render() {
+        // TODO COLOCAR ESSAS CONSTANTES EM COMPONENTES SEPARADOS
         const locationPredictions = this.state.locationPredictions.map(prediction => (
             <TouchableHighlight key={prediction.id} onPress={() => this.pressedPrediction(prediction)}>
                 <Text style={styles.sugestions}>{prediction.description}</Text>
@@ -133,6 +134,7 @@ class weatherMenuNoComment extends Component {
             <LinearGradient locations={[0.3, 1]} colors={['#61045f', '#210520']} style={styles.linearGradient}>
                 <View style={styles.container}>
 
+                    {/* TODO MAKE THIS MODAL INTO A SEPARATED COMPONENT */}
                     <Modal isVisible={this.state.isVisible} style={styles.modal}
                         useNativeDriver={true} >
                         <View style={{ flex: 1, alignItems: 'center' }}>
@@ -275,13 +277,15 @@ const styles = StyleSheet.create({
     },
     input: {
         width: wp('80%'),
-        height: hp('8%'),
+        height: hp('6%'),
+        backgroundColor: 'rgba(203, 209, 208, 0.2)',
         borderBottomWidth: 2,
         borderColor: '#9ea2a3',
         color: 'white',
-        paddingBottom: 0,
+        //paddingBottom: 0,
         marginBottom: 10,
-        fontSize: 18
+        fontSize: 18,
+        //textAlignVertical: 'center'
     },
     infoContainer: {
         width: wp('80%'),
