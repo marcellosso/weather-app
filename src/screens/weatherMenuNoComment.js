@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     input: {
         width: wp('80%'),
         height: hp('6%'),
-        backgroundColor: 'rgba(203, 209, 208, 0.2)',
+        // backgroundColor: 'rgba(203, 209, 208, 0.2)',
         borderBottomWidth: 2,
         borderColor: '#9ea2a3',
         color: 'white',
