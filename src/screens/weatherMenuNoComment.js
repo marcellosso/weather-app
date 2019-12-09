@@ -41,13 +41,28 @@ class weatherMenuNoComment extends Component {
             dateTime: '',
             placeId: '',
             photoReference: '',
-            placeName: ''
+            placeName: '',
+            image: ''
         }
         this.onChangePlaceDebounced = _.debounce(this.onChangePlace, 500)
     }
 
     componentDidMount() {
         this.getWeather()
+    }
+
+    async getRealPhoto() {
+        const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1280&photoreference=${this.state.photoReference}&key=${apiKey}&maxheight=720`
+    
+        try {
+            const result = await fetch(url);
+            this.setState({
+                image: result.url
+            })
+        } catch (err) {
+            console.error(err)
+        }
+    
     }
 
     async searchPlace() {
@@ -60,6 +75,8 @@ class weatherMenuNoComment extends Component {
                 photoReference: this.getPhoto(json.result.photos),
                 placeName: json.result.name
             })
+
+            this.getRealPhoto()
         } catch (err) {
             console.error(err)
         }
@@ -150,7 +167,7 @@ class weatherMenuNoComment extends Component {
         const weatherOthers = this.state.weatherWeek.slice(1).map(weather => (
             <TouchableOpacity key={weather.id} onPress={() => {this.props.navigation.navigate('detailed', {
                 temp: weather.temperatureMin, max: weather.temperatureMax, min: weather.temperatureMin,
-                image: this.state.photoReference
+                image: this.state.image
             })}}>
                 <WeatherOtherDays key={weather.id} day={this.dateTime(weather.time)}
                     tempC={weather.temperatureMin} tempF={this.fahrenheit(weather.temperatureMin).toFixed(1)} />
