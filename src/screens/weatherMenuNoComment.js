@@ -19,7 +19,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import WeatherDay from '../components/weatherDay'
 import WeatherOtherDays from '../components/weatherOtherDays'
-import  Modal  from 'react-native-modal'
+import Modal from 'react-native-modal'
 
 import apiKey from '../google_APIKEY'
 import weatherAPI from '../weather_APIKEY'
@@ -52,17 +52,18 @@ class weatherMenuNoComment extends Component {
     }
 
     async getRealPhoto() {
-        const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1280&photoreference=${this.state.photoReference}&key=${apiKey}&maxheight=720`
-    
+        const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=720&photoreference=${this.state.photoReference}&key=${apiKey}&maxheight=1280`
+
         try {
             const result = await fetch(url);
+            console.log(result)
             this.setState({
                 image: result.url
             })
         } catch (err) {
             console.error(err)
         }
-    
+
     }
 
     async searchPlace() {
@@ -71,15 +72,22 @@ class weatherMenuNoComment extends Component {
         try {
             const result = await fetch(url);
             const json = await result.json()
+
+            let testePH = !json.result.photos ? false : true
+            let referenceHawaii = 'CmRaAAAA4ioONhmVQM7IO2Tp4mwhy4GSmsQsrRno2Hvua0BP6AjiU4EMhy7HG9DDpgWDI7ipvNLAqF-6ziZJOmJ0HIerbQ6Ee-Jo2nsX2ZfcZIYqojUmF8ARoWkrVwnAn1S5jtA_EhDaG8xQUkFO6HWE7uQmvpgEGhSh0F6NQKjbhwgB2007au7kgDiaeg'
+
             this.setState({
-                photoReference: this.getPhoto(json.result.photos),
+                photoReference: testePH ? this.getPhoto(json.result.photos) : referenceHawaii,
                 placeName: json.result.name
             })
-
+                
             this.getRealPhoto()
+           
+
         } catch (err) {
             console.error(err)
         }
+
 
     }
 
@@ -120,7 +128,7 @@ class weatherMenuNoComment extends Component {
         }
     }
 
-    getPhoto(photos){
+    getPhoto(photos) {
         let random = Math.floor(Math.random() * photos.length);
         return photos[random].photo_reference
 
@@ -152,9 +160,9 @@ class weatherMenuNoComment extends Component {
 
     toggleModal = () => {
         this.setState({ isVisible: !this.state.isVisible });
-      };
+    };
 
-      // TODO TIRAR O GETWEATHER() DE DENTRO DA AÇÃO DO BOTAO CHANGE LOCATION
+    // TODO TIRAR O GETWEATHER() DE DENTRO DA AÇÃO DO BOTAO CHANGE LOCATION
 
     render() {
         // TODO COLOCAR ESSAS CONSTANTES EM COMPONENTES SEPARADOS
@@ -165,10 +173,12 @@ class weatherMenuNoComment extends Component {
         ))
 
         const weatherOthers = this.state.weatherWeek.slice(1).map(weather => (
-            <TouchableOpacity key={weather.id} onPress={() => {this.props.navigation.navigate('detailed', {
-                temp: weather.temperatureMin, max: weather.temperatureMax, min: weather.temperatureMin,
-                image: this.state.image
-            })}}>
+            <TouchableOpacity key={weather.id} onPress={() => {
+                this.props.navigation.navigate('detailed', {
+                    temp: weather.temperatureMin, max: weather.temperatureMax, min: weather.temperatureMin,
+                    image: this.state.image
+                })
+            }}>
                 <WeatherOtherDays key={weather.id} day={this.dateTime(weather.time)}
                     tempC={weather.temperatureMin} tempF={this.fahrenheit(weather.temperatureMin).toFixed(1)} />
             </TouchableOpacity>
@@ -187,13 +197,13 @@ class weatherMenuNoComment extends Component {
                                 value={this.state.place}
                                 onChangeText={place => { this.onChangePlaceDebounced(place), this.setState({ place }) }} />
                             <LinearGradient colors={['#9002d1', '#e205ff']}
-                            start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                            locations={[0.3, 1]}
-                            style={{
-                                borderRadius: wp('5%'), alignItems: 'center',  justifyContent: 'center', marginBottom: hp('2%')
-                            }}>
+                                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                                locations={[0.3, 1]}
+                                style={{
+                                    borderRadius: wp('5%'), alignItems: 'center', justifyContent: 'center', marginBottom: hp('2%')
+                                }}>
                                 <TouchableOpacity style={styles.button}
-                                onPress={() => { this.getWeather(), this.toggleModal(), this.searchPlace() }}
+                                    onPress={() => { this.getWeather(), this.toggleModal(), this.searchPlace() }}
                                 >
                                     <Text style={[styles.buttonText, { color: 'white' }]}>Accept</Text>
                                 </TouchableOpacity>
@@ -208,24 +218,24 @@ class weatherMenuNoComment extends Component {
                         </Text>
                     </View>
 
-                        <LinearGradient colors={['#9002d1', '#e205ff']}
-                            start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                            locations={[0.3, 1]}
-                            style={{
-                                borderRadius: wp('5%'), alignItems: 'center',
-                                justifyContent: 'center'
-                            }}>
+                    <LinearGradient colors={['#9002d1', '#e205ff']}
+                        start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                        locations={[0.3, 1]}
+                        style={{
+                            borderRadius: wp('5%'), alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
 
-                            <TouchableOpacity style={styles.button}
-                                onPress={() => { this.setState({ locationPredictions: [], place: '' }), this.getWeather(), this.toggleModal() }}
-                            >
+                        <TouchableOpacity style={styles.button}
+                            onPress={() => { this.setState({ locationPredictions: [], place: '' }), this.getWeather(), this.toggleModal() }}
+                        >
 
-                                <Icon name='map-marker' size={22} color='white'>
-                                    <Text style={styles.buttonText}>   Change Location</Text>
-                                </Icon>
+                            <Icon name='map-marker' size={22} color='white'>
+                                <Text style={styles.buttonText}>   Change Location</Text>
+                            </Icon>
 
-                            </TouchableOpacity>
-                        </LinearGradient>
+                        </TouchableOpacity>
+                    </LinearGradient>
 
                     <View style={styles.infoContainer}>
                         <View style={{
@@ -307,9 +317,9 @@ const styles = StyleSheet.create({
 
     },
     titleContainer: {
-        marginBottom: hp('1.5%'), 
-        width: wp('100%'), 
-        justifyContent: 'center', 
+        marginBottom: hp('1.5%'),
+        width: wp('100%'),
+        justifyContent: 'center',
         alignItems: 'center'
     },
     linearGradient: {

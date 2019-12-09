@@ -27,7 +27,7 @@ class detailed extends Component {
         return (
             // <View>
             <ImageBackground source={{ uri: navigation.getParam('image') }}
-                style={styles.imageBG} blurRadius={5} resizeMode='cover'>
+                style={styles.imageBG} blurRadius={0} resizeMode='cover'>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => {
                         this.props.navigation.navigate('weatherMenuNoComment')
@@ -37,7 +37,7 @@ class detailed extends Component {
                         </Icon>
                     </TouchableOpacity>
                 </View>
-                {console.log(navigation.getParam('image'))}
+
                 <View>
                     <Text>Temperatura: {JSON.stringify(navigation.getParam('temp'))}</Text>
                     <Text>Max: {JSON.stringify(navigation.getParam('max'))}</Text>
