@@ -38,7 +38,10 @@ class weatherMenuNoComment extends Component {
             weatherToday: '',
             weatherWeek: [],
             todayDate: '',
-            dateTime: ''
+            dateTime: '',
+            placeId: '',
+            photoReference: '',
+            placeName: ''
         }
         this.onChangePlaceDebounced = _.debounce(this.onChangePlace, 500)
     }
@@ -47,10 +50,26 @@ class weatherMenuNoComment extends Component {
         this.getWeather()
     }
 
+    async searchPlace() {
+        const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.state.placeId}&fields=name,geometry,photo&key=${apiKey}`
+
+        try {
+            const result = await fetch(url);
+            const json = await result.json()
+            this.setState({
+                photoReference: this.getPhoto(json.result.photos),
+                placeName: json.result.name
+            })
+        } catch (err) {
+            console.error(err)
+        }
+
+    }
+
     async onChangePlace(place) {
         this.setState({ place })
         const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}
-        &input=${place}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
+        &input=${place}`;
 
         try {
             const result = await fetch(apiUrl);
@@ -65,6 +84,7 @@ class weatherMenuNoComment extends Component {
 
     }
 
+    // TODO PEGAR A LOCALIZAÇÃO ATUAL DO USUARIO
     async getWeather() {
         const url = `https://api.darksky.net/forecast/${weatherAPI}/${this.state.latitude},${this.state.longitude}?exclude=hourly,minutely&units=si`
 
@@ -83,11 +103,18 @@ class weatherMenuNoComment extends Component {
         }
     }
 
+    getPhoto(photos){
+        let random = Math.floor(Math.random() * photos.length);
+        return photos[random].photo_reference
+
+    }
+
     pressedPrediction(prediction) {
         Keyboard.dismiss();
         this.setState({
             locationPredictions: [],
-            place: prediction.description
+            place: prediction.description,
+            placeId: prediction.place_id
         });
         Keyboard;
     }
@@ -122,7 +149,8 @@ class weatherMenuNoComment extends Component {
 
         const weatherOthers = this.state.weatherWeek.slice(1).map(weather => (
             <TouchableOpacity key={weather.id} onPress={() => {this.props.navigation.navigate('detailed', {
-                temp: weather.temperatureMin, max: weather.temperatureMax, min: weather.temperatureMin
+                temp: weather.temperatureMin, max: weather.temperatureMax, min: weather.temperatureMin,
+                image: this.state.photoReference
             })}}>
                 <WeatherOtherDays key={weather.id} day={this.dateTime(weather.time)}
                     tempC={weather.temperatureMin} tempF={this.fahrenheit(weather.temperatureMin).toFixed(1)} />
@@ -148,7 +176,7 @@ class weatherMenuNoComment extends Component {
                                 borderRadius: wp('5%'), alignItems: 'center',  justifyContent: 'center', marginBottom: hp('2%')
                             }}>
                                 <TouchableOpacity style={styles.button}
-                                onPress={() => { this.getWeather(), this.toggleModal() }}
+                                onPress={() => { this.getWeather(), this.toggleModal(), this.searchPlace() }}
                                 >
                                     <Text style={[styles.buttonText, { color: 'white' }]}>Accept</Text>
                                 </TouchableOpacity>
@@ -159,7 +187,7 @@ class weatherMenuNoComment extends Component {
 
                     <View style={styles.titleContainer}>
                         <Text style={styles.titleText}>
-                            SANTOS, SP
+                            {this.state.placeName}
                         </Text>
                     </View>
 
