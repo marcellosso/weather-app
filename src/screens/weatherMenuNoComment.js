@@ -28,6 +28,8 @@ import _ from "lodash"
 class weatherMenuNoComment extends Component {
     constructor(props) {
         super(props)
+
+        // TODO MUDAR ESSE CARALHO, COLOCAR UM OBJETO COM AS INFORMAÇOES, SEILA
         this.state = {
             isVisible: false,
             place: '',
@@ -42,7 +44,10 @@ class weatherMenuNoComment extends Component {
             placeId: '',
             photoReference: '',
             placeName: '',
-            image: ''
+            image: '',
+            wind: '',
+            precipitation: '',
+            humidity: '',
         }
         this.onChangePlaceDebounced = _.debounce(this.onChangePlace, 500)
     }
@@ -120,7 +125,10 @@ class weatherMenuNoComment extends Component {
             this.setState({
                 weatherToday: jsonRes.currently,
                 weatherWeek: jsonRes.daily.data,
-                todayDate: jsonRes.currently.time
+                todayDate: jsonRes.currently.time,
+                wind: jsonRes;
+                // precipitation:
+                // humidity:
             })
 
         } catch (err) {
