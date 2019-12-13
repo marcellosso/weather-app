@@ -126,9 +126,9 @@ class weatherMenuNoComment extends Component {
                 weatherToday: jsonRes.currently,
                 weatherWeek: jsonRes.daily.data,
                 todayDate: jsonRes.currently.time,
-                wind: jsonRes;
-                // precipitation:
-                // humidity:
+                wind: jsonRes.currently.windSpeed,
+                precipitation: jsonRes.currently.precipIntensity * 100,
+                humidity: jsonRes.currently.humidity * 100 //* 100 para transformar em porcentagem
             })
 
         } catch (err) {
@@ -257,7 +257,7 @@ class weatherMenuNoComment extends Component {
                                 fontFamily: Platform.OS === 'ios' ? 'Montserrat Regular' : 'Montserrat-Regular',
                                 marginLeft: wp('38%'), fontSize: 23, color: 'white'
                             }}>
-                                0 km/h
+                                {this.state.wind} km/h
                             </Text>
                         </View>
                         <View style={{
@@ -271,7 +271,7 @@ class weatherMenuNoComment extends Component {
                                 fontFamily: Platform.OS === 'ios' ? 'Montserrat Regular' : 'Montserrat-Regular',
                                 marginLeft: wp('18%'), fontSize: 23, color: 'white'
                             }}>
-                                0 %
+                                {this.state.precipitation} %
                             </Text>
                         </View>
                         <View style={{
@@ -285,7 +285,7 @@ class weatherMenuNoComment extends Component {
                                 fontFamily: Platform.OS === 'ios' ? 'Montserrat Regular' : 'Montserrat-Regular',
                                 marginLeft: wp('34%'), fontSize: 23, color: 'white'
                             }}>
-                                0 %
+                                {this.state.humidity} %
                             </Text>
                         </View>
                     </View>
