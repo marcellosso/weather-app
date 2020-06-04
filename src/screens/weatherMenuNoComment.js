@@ -255,7 +255,7 @@ class weatherMenuNoComment extends Component {
                             </Icon>
                             <Text style={{
                                 fontFamily: Platform.OS === 'ios' ? 'Montserrat Regular' : 'Montserrat-Regular',
-                                marginLeft: wp('38%'), fontSize: 23, color: 'white'
+                                marginLeft: wp('33%'), fontSize: 23, color: 'white'
                             }}>
                                 {this.state.wind} km/h
                             </Text>
@@ -271,7 +271,8 @@ class weatherMenuNoComment extends Component {
                                 fontFamily: Platform.OS === 'ios' ? 'Montserrat Regular' : 'Montserrat-Regular',
                                 marginLeft: wp('18%'), fontSize: 23, color: 'white'
                             }}>
-                                {this.state.precipitation} %
+                                {/* {this.state.precipitation} % */}
+                                10 %
                             </Text>
                         </View>
                         <View style={{
